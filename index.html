@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Keyboard CPS Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #0a0e27, #1a1f3a, #0f0f1e);
+            color: #00ff88;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 200, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 3.5em;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4);
+            animation: glow 3s ease-in-out infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4); }
+            50% { text-shadow: 0 0 30px rgba(0, 255, 136, 1), 0 0 60px rgba(0, 255, 136, 0.6); }
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #00ccff;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.6);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .setting-group {
+            text-align: left;
+            background: rgba(0, 255, 136, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .setting-group h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .time-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .time-btn {
+            flex: 1;
+            padding: 10px;
+            background: linear-gradient(145deg, #1a3a2a, #0f5f4a);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .time-btn:hover {
+            background: linear-gradient(145deg, #2a5a4a, #1f7f6a);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .time-btn.active {
+            background: #00ff88;
+            color: #0a0e27;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+        }
+
+        .key-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .key-option {
+            position: relative;
+        }
+
+        .key-option input {
+            display: none;
+        }
+
+        .key-option label {
+            display: block;
+            padding: 12px;
+            background: linear-gradient(145deg, #1a3a2a, #0f5f4a);
+            border: 2px solid #00ff88;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #00ff88;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .key-option input:checked + label {
+            background: linear-gradient(145deg, #00ff88, #00dd77);
+            color: #0a0e27;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+            transform: scale(1.05);
+        }
+
+        .key-option label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .mode {
+            margin-bottom: 30px;
+        }
+
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            cursor: pointer;
+            background: linear-gradient(145deg, #ff3366, #ff1744);
+            color: white;
+            border: 2px solid #ff5566;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            background: linear-gradient(145deg, #ff5588, #ff3355);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .start-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .counter {
+            font-size: 3em;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 136, 0.6); }
+        }
+
+        .counter p {
+            margin: 15px 0;
+            font-size: 0.7em;
+            color: #00ccff;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.6);
+        }
+
+        span {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .settings {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .counter {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KEYBOARD CPS TEST</h1>
+    <p>Press your selected keys as fast as possible!</p>
+
+    <div class="settings">
+        <div class="setting-group">
+            <h3>⏱ Duration (seconds)</h3>
+            <div class="time-controls">
+                <button class="time-btn active" onclick="setDuration(5)">5s</button>
+                <button class="time-btn active" onclick="setDuration(10)">10s</button>
+                <button class="time-btn" onclick="setDuration(15)">15s</button>
+                <button class="time-btn" onclick="setDuration(30)">30s</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <h3>⌨ Select Up To 5 Keys</h3>
+            <div class="key-selector">
+                <div class="key-option">
+                    <input type="checkbox" id="key-w" value="w" onchange="updateKeySelection()">
+                    <label for="key-w">W</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-a" value="a" onchange="updateKeySelection()">
+                    <label for="key-a">A</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-s" value="s" onchange="updateKeySelection()">
+                    <label for="key-s">S</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-d" value="d" onchange="updateKeySelection()">
+                    <label for="key-d">D</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-space" value="space" onchange="updateKeySelection()">
+                    <label for="key-space">Space</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-arrow-up" value="arrowup" onchange="updateKeySelection()">
+                    <label for="key-arrow-up">↑ Up</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-arrow-left" value="arrowleft" onchange="updateKeySelection()">
+                    <label for="key-arrow-left">← Left</label>
+                </div>
+                <div class="key-option">
+                    <input type="checkbox" id="key-arrow-right" value="arrowright" onchange="updateKeySelection()">
+                    <label for="key-arrow-right">→ Right</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mode">
+        <button class="start-btn" onclick="startTest()" id="startBtn">START TEST</button>
+    </div>
+
+    <div class="counter">
+        <p>⏱ TIME LEFT: <span id="time">0</span>s</p>
+        <p>✓ TOTAL PRESSES: <span id="count">0</span></p>
+        <p>⚡ CPS: <span id="cps">0.00</span></p>
+    </div>
+</div>
+
+<script>
+let count = 0;
+let timeLeft = 0;
+let testDuration = 10;
+let timer = null;
+let active = false;
+let selectedKeys = [];
+
+function setDuration(seconds) {
+    if (active) return;
+    
+    testDuration = seconds;
+    
+    // Update active state of time buttons
+    const timeButtons = document.querySelectorAll('.time-btn');
+    timeButtons.forEach(btn => {
+        const duration = parseInt(btn.textContent);
+        if (duration === seconds) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function updateKeySelection() {
+    selectedKeys = [];
+    const keyCheckboxes = document.querySelectorAll('.key-option input[type="checkbox"]:checked');
+    
+    if (keyCheckboxes.length > 5) {
+        // Uncheck the last one if more than 5 are selected
+        keyCheckboxes[keyCheckboxes.length - 1].checked = false;
+        return;
+    }
+    
+    keyCheckboxes.forEach(checkbox => {
+        selectedKeys.push(checkbox.value);
+    });
+}
+
+function startTest() {
+    if (active) return;
+    
+    updateKeySelection();
+    
+    if (selectedKeys.length === 0) {
+        alert('Please select at least one key!');
+        return;
+    }
+
+    count = 0;
+    timeLeft = testDuration;
+    active = true;
+
+    document.getElementById("count").textContent = count;
+    document.getElementById("time").textContent = timeLeft;
+    document.getElementById("cps").textContent = "0.00";
+    document.getElementById("startBtn").disabled = true;
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            active = false;
+            document.getElementById("cps").textContent = (count / testDuration).toFixed(2);
+            document.getElementById("startBtn").disabled = false;
+        }
+    }, 1000);
+}
+
+document.addEventListener("keydown", function(event) {
+    if (!active) return;
+
+    let keyPressed = null;
+    
+    if (event.key.toLowerCase() === 'w') {
+        keyPressed = 'w';
+    } else if (event.key.toLowerCase() === 'a') {
+        keyPressed = 'a';
+    } else if (event.key.toLowerCase() === 's') {
+        keyPressed = 's';
+    } else if (event.key.toLowerCase() === 'd') {
+        keyPressed = 'd';
+    } else if (event.code === 'Space') {
+        event.preventDefault();
+        keyPressed = 'space';
+    } else if (event.key === 'ArrowUp') {
+        keyPressed = 'arrowup';
+    } else if (event.key === 'ArrowLeft') {
+        keyPressed = 'arrowleft';
+    } else if (event.key === 'ArrowRight') {
+        keyPressed = 'arrowright';
+    }
+
+    if (keyPressed && selectedKeys.includes(keyPressed)) {
+        count++;
+        document.getElementById("count").textContent = count;
+    }
+});
+</script>
+
+</body>
+</html>
